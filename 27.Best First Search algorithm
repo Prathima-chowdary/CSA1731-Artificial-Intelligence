@@ -1,0 +1,35 @@
+insert_pq(E, [], [E]).
+insert_pq((F, N), [(F1, N1)|Rest], [(F, N), (F1, N1)|Rest]) :-
+    F =< F1, !.
+insert_pq((F, N), [H|Rest], [H|Rest1]) :-
+    insert_pq((F, N), Rest, Rest1).
+
+best_first_search(Start, Goal, Path) :-
+    heuristic(Start, H),
+    bfs([(H, [Start])], Goal, RevPath),
+    reverse(RevPath, Path).
+
+bfs([(H, [Goal|RestPath])|_], Goal, [Goal|RestPath]).
+bfs([(_, [Current|RestPath])|RestQueue], Goal, Path) :-
+    findall((F, [Next, Current|RestPath]),
+            (edge(Current, Next, Cost), \+ member(Next, [Current|RestPath]),
+             heuristic(Next, H), F is H),
+            Children),
+    append(RestQueue, Children, NewQueue),
+    sort(1, @=<, NewQueue, SortedQueue),
+    bfs(SortedQueue, Goal, Path).
+edge(a, b, 1).
+edge(a, c, 1).
+edge(b, d, 1).
+edge(c, d, 1).
+edge(c, e, 1).
+edge(d, f, 1).
+edge(e, f, 1).
+
+heuristic(a, 6).
+heuristic(b, 5).
+heuristic(c, 4).
+heuristic(d, 2).
+heuristic(e, 3).
+heuristic(f, 0).
+
