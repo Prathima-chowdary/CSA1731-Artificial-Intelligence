@@ -1,0 +1,36 @@
+% Knowledge Base
+
+% Facts
+parent(john, mary).
+parent(john, alex).
+parent(mary, jane).
+parent(mary, mark).
+parent(alex, tina).
+parent(alex, tom).
+
+male(john).
+male(alex).
+male(mark).
+male(tom).
+
+female(mary).
+female(jane).
+female(tina).
+
+% Rules
+grandparent(X, Y) :-
+    parent(X, Z),
+    parent(Z, Y).
+
+ancestor(X, Y) :-
+    parent(X, Y).
+ancestor(X, Y) :-
+    parent(X, Z),
+    ancestor(Z, Y).
+
+% Sample Queries
+% ?- grandparent(john, jane).
+% ?- ancestor(john, mark).
+% ?- ancestor(mary, tom).
+% ?- grandparent(X, tom).
+% ?- ancestor(X, tina).
